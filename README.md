@@ -1,8 +1,8 @@
 # 🖥️ Linux System Manager
 
-A Python-based Linux System Monitoring Tool that collects and displays important system information using the `psutil` library.
+A Python-based Linux system monitoring application that provides essential system information and resource usage statistics through an interactive terminal menu.
 
-This project is being developed step by step to improve my Python programming and Linux administration skills.
+This project is being developed to build practical skills in **Python Programming, Linux System Administration, Git, and System Monitoring**.
 
 ## 🚀 Features
 
@@ -42,26 +42,50 @@ This project is being developed step by step to improve my Python programming an
 - Data Sent
 - Data Received
 
+### 6. System Monitoring
+- Hostname
+- System Boot Time
+- System Uptime
+
+### 7. Live System Monitoring
+- Continuous CPU Usage Monitoring
+- Continuous RAM Usage Monitoring
+- Continuous Disk Usage Monitoring
+- Stop monitoring using `Ctrl + C`
+
+### 8. Process Monitoring
+- Running Process List
+- Process ID (PID)
+- Process Name
+- Process Username
+- RAM Usage Percentage
+- Top 15 processes sorted by RAM usage
+
 ## 🛠️ Technologies Used
 
-- Python 3
-- Linux (Ubuntu on WSL2)
-- Git & GitHub
-- psutil
+- **Python 3**
+- **psutil** – System and process monitoring
+- **Linux (Ubuntu on WSL2)**
+- **Git & GitHub**
 
 ## 📁 Project Structure
 
 ```text
-system-manager/
+linux-project/
 │
 ├── README.md
+├── .gitignore
+├── main.py
 ├── system-info.py
 │
 └── modules/
     ├── cpu.py
     ├── memory.py
     ├── disk.py
-    └── network.py
+    ├── network.py
+    ├── system.py
+    ├── live.py
+    └── process.py
 ```
 
 ## ⚙️ Installation
@@ -72,58 +96,78 @@ system-manager/
 git clone https://github.com/Jashan-khass/linux-project.git
 ```
 
-### 2. Open the project directory
+### 2. Navigate to the project directory
 
 ```bash
 cd linux-project
 ```
 
-### 3. Install dependency
+### 3. Install dependencies
+
+On Ubuntu:
 
 ```bash
 sudo apt update
 sudo apt install python3-psutil -y
 ```
 
+Alternatively:
+
+```bash
+python3 -m pip install psutil
+```
+
 ## ▶️ Usage
 
-Run the main system information script:
+Start the interactive system manager:
+
+```bash
+python3 main.py
+```
+
+You can also run individual modules:
 
 ```bash
 python3 system-info.py
-```
-
-Run individual monitoring modules:
-
-```bash
 python3 modules/cpu.py
 python3 modules/memory.py
 python3 modules/disk.py
 python3 modules/network.py
+python3 modules/system.py
+python3 modules/live.py
+python3 modules/process.py
 ```
 
-## 🎯 Project Goals
+Stop live monitoring with `Ctrl + C`.
 
-- Learn Python programming through practical projects.
+## 🎯 Learning Objectives
+
+- Learn Python through practical projects.
 - Understand Linux system administration.
 - Monitor CPU, RAM, disk, and network resources.
-- Build a modular system monitoring application.
-- Improve Git and GitHub workflow skills.
+- Understand Linux processes and resource usage.
+- Practice Python functions, loops, conditions, and exception handling.
+- Learn modular Python project organization.
+- Build confidence with Git and GitHub.
 
 ## 🔮 Future Improvements
 
-- Interactive terminal menu
-- Real-time system monitoring
-- Process monitoring
+- Real-time CPU and RAM graphs
+- Process CPU usage monitoring
+- Process search and filtering
 - JSON and TXT report generation
 - System alerts and logging
+- Interactive process management
 - Improved error handling
+- Better terminal interface
 
 ## 👨‍💻 Author
 
 **Jashanpreet Kaur**
 
 GitHub: [@Jashan-khass](https://github.com/Jashan-khass)
+
+Project Repository: [Linux System Manager](https://github.com/Jashan-khass/linux-project)
 
 ---
 
