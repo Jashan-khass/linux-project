@@ -1,5 +1,6 @@
 
 import psutil
+import time
 
 
 def get_process_info():
@@ -8,17 +9,31 @@ def get_process_info():
 
     processes = []
 
-    for process in psutil.process_iter(
-        ["pid", "name", "username", "memory_percent"]
-    ):
+    # First CPU measurement
+    for process in psutil.process_iter():
 
         try:
-            # Measure CPU usage
+            process.cpu_percent(interval=None)
+            processes.append(process)
+
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    # Wait for second CPU measurement
+    time.sleep(1)
+
+    results = []
+
+    for process in processes:
+
+        try:
+            info = process.as_dict(
+                attrs=["pid", "name", "username", "memory_percent"]
+            )
+
             cpu_usage = process.cpu_percent(interval=None)
 
-            info = process.info
-
-            processes.append({
+            results.append({
                 "pid": info["pid"],
                 "name": info["name"],
                 "username": info["username"],
@@ -29,9 +44,9 @@ def get_process_info():
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
 
-    # Sort processes by CPU usage
-    processes.sort(
-        key=lambda process: process["cpu"],
+    # Sort by CPU usage
+    results.sort(
+        key=lambda item: item["cpu"],
         reverse=True
     )
 
@@ -41,7 +56,7 @@ def get_process_info():
     )
     print("-" * 55)
 
-    for process in processes[:15]:
+    for process in results[:15]:
 
         print(
             f"{process['pid']:<8} "
@@ -55,3 +70,4 @@ def get_process_info():
 
 if __name__ == "__main__":
     get_process_info()
+
