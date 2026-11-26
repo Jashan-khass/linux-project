@@ -5,6 +5,7 @@ from modules.disk import get_disk_info
 from modules.network import get_network_info
 from modules.system import get_system_info
 from modules.live import live_monitor
+from modules.process import get_process_info
 
 def main_menu():
 
@@ -18,7 +19,8 @@ def main_menu():
         print("4. Network Information")
         print("5. System Information")
         print("6. Live System Monitoring")
-        print("7. Exit")
+        print("7. Process Monitoring")
+        print("8. Exit")
 
         choice = input("\nEnter your choice: ")
 
@@ -41,6 +43,9 @@ def main_menu():
             live_monitor()
 
         elif choice == "7":
+            get_process_info()
+
+        elif choice == "8":
             print("Exiting Linux System Manager...")
             break
 
