@@ -3,6 +3,7 @@ from modules.cpu import get_cpu_info
 from modules.memory import get_memory_info
 from modules.disk import get_disk_info
 from modules.network import get_network_info
+from modules.system import get_system_info
 
 def main_menu():
 
@@ -14,7 +15,8 @@ def main_menu():
         print("2. RAM Information")
         print("3. Disk Information")
         print("4. Network Information")
-        print("5. Exit")
+        print("5. System Information")
+        print("6. Exit")
 
         choice = input("\nEnter your choice: ")
 
@@ -29,8 +31,11 @@ def main_menu():
 
         elif choice == "4":
             get_network_info()
-
+         
         elif choice == "5":
+            get_system_info()
+
+        elif choice == "6":
             print("Exiting Linux System Manager...")
             break
 
