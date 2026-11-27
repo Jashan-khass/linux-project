@@ -32,3 +32,18 @@ def get_cpu_info():
 
 if __name__ == "__main__":
     get_cpu_info()
+
+def get_cpu_data():
+    import psutil
+
+    cpu_usage = psutil.cpu_percent(interval=1)
+    physical_cores = psutil.cpu_count(logical=False)
+    logical_cores = psutil.cpu_count(logical=True)
+    frequency = psutil.cpu_freq()
+
+    return{
+        "usage": cpu_usage,
+        "physical_cores": physical_cores,
+        "logical_cores": logical_cores,
+        "frequency": frequency.current if frequency else 0
+    }
