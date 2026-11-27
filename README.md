@@ -75,6 +75,12 @@ Built using Python, Tkinter and psutil, this project helps monitor CPU, RAM, dis
 - Export system information in JSON format
 - Save reports inside the reports directory
 
+## 📸 Application Screenshot
+
+### GUI Dashboard
+
+![Linux System Manager Dashboard](screenshots/dashboard.png)
+
 ## 🛠️ Technologies Used
 
 - Python 3
