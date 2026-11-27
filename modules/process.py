@@ -71,3 +71,32 @@ def get_process_info():
 if __name__ == "__main__":
     get_process_info()
 
+
+def get_process_data():
+    import psutil
+
+    process_list = []
+
+    for process in psutil.process_iter(
+        attrs=["pid", "name", "username", "memory_percent"]
+    ):
+        try:
+            data = process.info
+
+            process_list.append({
+                "pid": data["pid"],
+                "name": data["name"],
+                "username": data["username"],
+                "memory": data["memory_percent"]
+            })
+
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    # Sort processes by RAM usage
+    process_list.sort(
+        key=lambda x: x["memory"] or 0,
+        reverse=True
+    )
+
+    return process_list[:15]

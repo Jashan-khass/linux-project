@@ -27,3 +27,16 @@ def get_disk_info():
 
 if __name__ == "__main__":
     get_disk_info()
+
+
+def get_disk_data():
+    import psutil
+
+    disk = psutil.disk_usage("/")
+
+    return {
+        "total": disk.total / (1024 ** 3),
+        "used": disk.used / (1024 ** 3),
+        "free": disk.free / (1024 ** 3),
+        "percent": disk.percent
+    }

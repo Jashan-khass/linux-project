@@ -71,3 +71,15 @@ if __name__ == "__main__":
     get_swap_info()
     get_top_memory_processes()
 
+
+def get_memory_data():
+    import psutil
+
+    memory = psutil.virtual_memory()
+
+    return {
+        "total": memory.total / (1024 ** 3),
+        "used": memory.used / (1024 ** 3),
+        "available": memory.available / (1024 ** 3),
+        "percent": memory.percent
+    }

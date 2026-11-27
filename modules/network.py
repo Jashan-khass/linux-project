@@ -31,3 +31,27 @@ def get_network_info():
 
 if __name__ == "__main__":
     get_network_info()
+
+
+def get_network_data():
+    import psutil
+    import socket
+
+    interfaces = psutil.net_if_addrs()
+    network_stats = psutil.net_io_counters()
+
+    interface_data = []
+
+    for interface, addresses in interfaces.items():
+        for address in addresses:
+            if address.family == socket.AF_INET:
+                interface_data.append({
+                    "name": interface,
+                    "ip": address.address
+                })
+
+    return {
+        "interfaces": interface_data,
+        "sent": network_stats.bytes_sent / (1024 ** 2),
+        "received": network_stats.bytes_recv / (1024 ** 2)
+    }

@@ -47,3 +47,31 @@ def search_process():
 
 if __name__ == "__main__":
     search_process()
+
+
+def find_process_data(search_term):
+    import psutil
+
+    results = []
+
+    for process in psutil.process_iter(
+        attrs=["pid", "name", "username", "memory_percent"]
+    ):
+        try:
+            data = process.info
+
+            pid = str(data["pid"])
+            name = data["name"] or ""
+
+            if search_term.lower() in name.lower() or search_term == pid:
+                results.append({
+                    "pid": data["pid"],
+                    "name": name,
+                    "username": data["username"],
+                    "memory": data["memory_percent"]
+                })
+
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    return results
