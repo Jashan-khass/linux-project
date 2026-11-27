@@ -8,6 +8,7 @@ from modules.live import live_monitor
 from modules.process import get_process_info
 from modules.search import search_process
 from modules.report import generate_report
+from modules.health import get_system_health
 
 def main_menu():
 
@@ -24,7 +25,8 @@ def main_menu():
         print("7. Process Monitoring")
         print("8. search process")
         print("9. Generate JSON Report")
-        print("10. Exit")
+        print("10. System Health Check")
+        print("11. Exit")
 
         choice = input("\nEnter your choice: ")
 
@@ -56,6 +58,9 @@ def main_menu():
             generate_report()
 
         elif choice == "10":
+            get_system_health()
+
+        elif choice == "11":
             print("Exiting Linux System Manager...")
             break
 
