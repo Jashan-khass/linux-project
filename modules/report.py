@@ -8,16 +8,16 @@ from pathlib import Path
 
 def generate_report():
 
-    print("\nGENERATING SYSTEM REPORT")
+    print("\nGENERATING ADVANCED SYSTEM REPORT")
 
-    # CPU information
+    # CPU Information
     cpu_info = {
         "usage_percent": psutil.cpu_percent(interval=1),
         "physical_cores": psutil.cpu_count(logical=False),
         "logical_cores": psutil.cpu_count(logical=True)
     }
 
-    # RAM information
+    # RAM Information
     memory = psutil.virtual_memory()
 
     memory_info = {
@@ -27,7 +27,7 @@ def generate_report():
         "usage_percent": memory.percent
     }
 
-    # Disk information
+    # Disk Information
     disk = psutil.disk_usage("/")
 
     disk_info = {
@@ -37,7 +37,7 @@ def generate_report():
         "usage_percent": disk.percent
     }
 
-    # System information
+    # System Information
     system_info = {
         "hostname": socket.gethostname(),
         "boot_time": datetime.fromtimestamp(
@@ -48,19 +48,93 @@ def generate_report():
         )
     }
 
-    # Complete report
+    # Network Information
+    network_info = {}
+
+    interfaces = psutil.net_if_addrs()
+    network_stats = psutil.net_io_counters(pernic=True)
+
+    for interface, addresses in interfaces.items():
+
+        interface_info = {
+            "ip_addresses": [],
+            "mac_address": None,
+            "bytes_sent": 0,
+            "bytes_received": 0
+        }
+
+        for address in addresses:
+
+            if address.family == socket.AF_INET:
+                interface_info["ip_addresses"].append(
+                    address.address
+                )
+
+            elif address.family == socket.AF_INET6:
+                interface_info["ip_addresses"].append(
+                    address.address
+                )
+
+            elif address.family == psutil.AF_LINK:
+                interface_info["mac_address"] = address.address
+
+        if interface in network_stats:
+            interface_info["bytes_sent"] = (
+                network_stats[interface].bytes_sent
+            )
+
+            interface_info["bytes_received"] = (
+                network_stats[interface].bytes_recv
+            )
+
+        network_info[interface] = interface_info
+
+    # Top 10 RAM-consuming Processes
+    processes = []
+
+    for process in psutil.process_iter(
+        ["pid", "name", "username", "memory_percent"]
+    ):
+
+        try:
+            info = process.info
+
+            processes.append({
+                "pid": info["pid"],
+                "name": info["name"],
+                "username": info["username"],
+                "memory_percent": round(
+                    info["memory_percent"] or 0, 2
+                )
+            })
+
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    processes.sort(
+        key=lambda item: item["memory_percent"],
+        reverse=True
+    )
+
+    top_processes = processes[:10]
+
+    # Complete Report
     report = {
         "system": system_info,
         "cpu": cpu_info,
         "memory": memory_info,
-        "disk": disk_info
+        "disk": disk_info,
+        "network": network_info,
+        "top_10_processes": top_processes
     }
 
-    # Create report directory
-    report_dir = Path(__file__).resolve().parent.parent / "reports"
+    # Save JSON Report
+    report_dir = (
+        Path(__file__).resolve().parent.parent / "reports"
+    )
+
     report_dir.mkdir(exist_ok=True)
 
-    # Save JSON report
     filename = datetime.now().strftime(
         "system_report_%Y%m%d_%H%M%S.json"
     )
