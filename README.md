@@ -1,91 +1,115 @@
 # 🖥️ Linux System Manager
 
-A Python-based Linux system monitoring application that provides essential system information and resource usage statistics through an interactive terminal menu.
+A Python-based Linux System Monitoring Application that provides real-time system resource monitoring through both a Command Line Interface (CLI) and a Graphical User Interface (GUI).
 
-This project is being developed to build practical skills in **Python Programming, Linux System Administration, Git, and System Monitoring**.
+Built using Python, Tkinter and psutil, this project helps monitor CPU, RAM, disk, network activity, running processes and overall system health.
 
 ## 🚀 Features
 
-### 1. System Information
-- Username
-- Operating System
-- Kernel Version
-- Machine Architecture
-- Current Working Directory
-- Date and Time
+### 1. Command Line Interface (CLI)
+- Interactive terminal menu
+- CPU, RAM and Disk information
+- Network information
+- System information
+- Live system monitoring
+- Process monitoring
+- Process search using PID or process name
+- System health check
+- JSON report generation
 
-### 2. CPU Monitoring
-- CPU Usage Percentage
-- Physical CPU Cores
-- Logical CPU Cores
-- CPU Frequency
-- CPU Usage Status (Normal, Moderate, High)
+### 2. Graphical User Interface (GUI)
+- Modern dark-themed dashboard
+- CPU, RAM and Disk usage cards
+- Live resource usage progress bars
+- Dynamic resource status indicator
+- System information panel
+- Running process counter
+- Manual dashboard refresh
+- Dedicated information windows
+- Process monitoring and search
+- System health checker
+- JSON report generation
 
-### 3. RAM Monitoring
+### 3. CPU Monitoring
+- CPU usage percentage
+- Physical and logical CPU cores
+- CPU frequency
+- CPU usage status
+
+### 4. RAM Monitoring
 - Total RAM
 - Used RAM
 - Available RAM
-- RAM Usage Percentage
-- High RAM Usage Warning
+- RAM usage percentage
+- Memory warnings
 
-### 4. Disk Monitoring
-- Total Disk Space
-- Used Disk Space
-- Free Disk Space
-- Disk Usage Percentage
-- Disk Status
+### 5. Disk Monitoring
+- Total disk space
+- Used disk space
+- Free disk space
+- Disk usage percentage
+- Disk status
 
-### 5. Network Monitoring
-- Network Interfaces
-- IP Address
-- MAC Address
-- Data Sent
-- Data Received
+### 6. Network Monitoring
+- Network interfaces
+- IP addresses
+- MAC addresses
+- Data sent and received
 
-### 6. System Monitoring
-- Hostname
-- System Boot Time
-- System Uptime
-
-### 7. Live System Monitoring
-- Continuous CPU Usage Monitoring
-- Continuous RAM Usage Monitoring
-- Continuous Disk Usage Monitoring
-- Stop monitoring using `Ctrl + C`
-
-### 8. Process Monitoring
-- Running Process List
+### 7. Process Monitoring
+- Running process list
 - Process ID (PID)
-- Process Name
-- Process Username
-- RAM Usage Percentage
-- Top 15 processes sorted by RAM usage
+- Process name
+- Process username
+- RAM usage percentage
+- Top processes sorted by RAM usage
+
+### 8. System Health Check
+- CPU usage monitoring
+- RAM usage monitoring
+- Disk usage monitoring
+- NORMAL, WARNING and CRITICAL status
+
+### 9. JSON Report Generator
+- Generate system monitoring reports
+- Export system information in JSON format
+- Save reports inside the reports directory
 
 ## 🛠️ Technologies Used
 
-- **Python 3**
-- **psutil** – System and process monitoring
-- **Linux (Ubuntu on WSL2)**
-- **Git & GitHub**
+- Python 3
+- psutil – System and process monitoring
+- Tkinter – Graphical User Interface
+- ttk – GUI widgets and progress bars
+- Linux (Ubuntu on WSL2)
+- Git and GitHub
 
 ## 📁 Project Structure
 
 ```text
-linux-project/
+system-manager/
 │
+├── app.py
+├── main.py
+├── gui.py
+├── system-info.py
 ├── README.md
 ├── .gitignore
-├── main.py
-├── system-info.py
 │
-└── modules/
-    ├── cpu.py
-    ├── memory.py
-    ├── disk.py
-    ├── network.py
-    ├── system.py
-    ├── live.py
-    └── process.py
+├── modules/
+│   ├── cpu.py
+│   ├── memory.py
+│   ├── disk.py
+│   ├── network.py
+│   ├── system.py
+│   ├── live.py
+│   ├── process.py
+│   ├── search.py
+│   ├── report.py
+│   └── health.py
+│
+└── reports/
+    └── Generated JSON reports
 ```
 
 ## ⚙️ Installation
@@ -108,58 +132,52 @@ On Ubuntu:
 
 ```bash
 sudo apt update
-sudo apt install python3-psutil -y
+sudo apt install python3-psutil python3-tk -y
 ```
 
-Alternatively:
+## ▶️ How to Run
+
+Start the application launcher:
 
 ```bash
-python3 -m pip install psutil
+python3 app.py
 ```
 
-## ▶️ Usage
+Choose your preferred mode:
 
-Start the interactive system manager:
+1. Command Line Interface (CLI)
+2. Graphical User Interface (GUI)
+3. Exit
+
+You can also run the CLI or GUI separately:
 
 ```bash
 python3 main.py
 ```
 
-You can also run individual modules:
-
 ```bash
-python3 system-info.py
-python3 modules/cpu.py
-python3 modules/memory.py
-python3 modules/disk.py
-python3 modules/network.py
-python3 modules/system.py
-python3 modules/live.py
-python3 modules/process.py
+python3 gui.py
 ```
-
-Stop live monitoring with `Ctrl + C`.
 
 ## 🎯 Learning Objectives
 
-- Learn Python through practical projects.
-- Understand Linux system administration.
-- Monitor CPU, RAM, disk, and network resources.
-- Understand Linux processes and resource usage.
-- Practice Python functions, loops, conditions, and exception handling.
-- Learn modular Python project organization.
-- Build confidence with Git and GitHub.
+- Python programming
+- Linux system administration
+- System resource monitoring
+- Process management and searching
+- GUI development using Tkinter
+- Modular Python programming
+- JSON report generation
+- Git and GitHub version control
 
 ## 🔮 Future Improvements
 
-- Real-time CPU and RAM graphs
-- Process CPU usage monitoring
-- Process search and filtering
-- JSON and TXT report generation
-- System alerts and logging
-- Interactive process management
-- Improved error handling
-- Better terminal interface
+- Real-time CPU and RAM usage graphs
+- Network speed monitoring
+- Advanced process management
+- System notifications
+- Improved dashboard customization
+- Additional report formats
 
 ## 👨‍💻 Author
 
