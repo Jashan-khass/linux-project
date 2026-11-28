@@ -339,7 +339,11 @@ def show_health_info():
 
 
 def generate_gui_report():
+    report_button.config(state="disabled")
+
     def show_result(error=None):
+        report_button.config(state="normal")
+
         if error is None:
             messagebox.showinfo(
                 "Report Generated",
@@ -815,6 +819,7 @@ def create_tool_button(parent, text, command, row, column):
         pady=8,
         sticky="ew"
     )
+    return button
 
 
 create_tool_button(
@@ -852,7 +857,7 @@ create_tool_button(
     show_health_info, 3, 0
 )
 
-create_tool_button(
+report_button = create_tool_button(
     tools_frame, "Generate JSON Report",
     generate_gui_report, 3, 1
 )
