@@ -14,6 +14,14 @@ from modules.report import generate_report
 from tkinter import messagebox
 import platform
 import datetime
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from collections import deque
+# Performance chart data
+cpu_history = deque(maxlen=20)
+ram_history = deque(maxlen=20)
+disk_history = deque(maxlen=20)
+time_history = deque(maxlen=20)
 
 def show_cpu_info():
     cpu_window = tk.Toplevel(root)
@@ -359,6 +367,31 @@ def refresh_dashboard_now():
     cpu_label.config(text=f"CPU Usage: {cpu:.1f}%")
     ram_label.config(text=f"RAM Usage: {ram:.1f}%")
     disk_label.config(text=f"DISK Usage: {disk:.1f}%")
+    # Store latest performance readings
+    cpu_history.append(cpu)
+    ram_history.append(ram)
+    disk_history.append(disk)
+
+    # Update chart data
+    x_values = list(range(len(cpu_history)))
+
+    cpu_line.set_data(x_values, list(cpu_history))
+    ram_line.set_data(x_values, list(ram_history))
+    disk_line.set_data(x_values, list(disk_history))
+
+    # Update all three charts
+    for chart in axes:
+        chart.set_xlim(0, 19)
+        chart.set_xticks(x_values)
+        chart.set_xticklabels(
+            list(time_history),
+            rotation=45,
+            fontsize=6,
+            color="white"
+        )
+
+    # Refresh charts
+    chart_canvas.draw_idle()
 
     highest_usage = max(cpu, ram, disk)
 
@@ -424,6 +457,58 @@ root.configure(bg="#1e1e2e")
 # Professional dark theme
 
 root.minsize(800, 700)
+# SCROLLABLE DASHBOARD
+
+main_container = tk.Frame(root, bg="#1e1e2e")
+main_container.pack(fill="both", expand=True)
+
+canvas = tk.Canvas(
+    main_container,
+    bg="#1e1e2e",
+    highlightthickness=0
+)
+
+scrollbar = ttk.Scrollbar(
+    main_container,
+    orient="vertical",
+    command=canvas.yview
+)
+
+canvas.configure(yscrollcommand=scrollbar.set)
+
+scrollbar.pack(side="right", fill="y")
+canvas.pack(side="left", fill="both", expand=True)
+
+content_frame = tk.Frame(canvas, bg="#1e1e2e")
+
+canvas_window = canvas.create_window(
+    (0, 0),
+    window=content_frame,
+    anchor="nw"
+)
+
+def update_scroll_region(event):
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+# Mouse wheel scrolling (Linux)
+def on_mousewheel(event):
+    if event.num == 4:
+        canvas.yview_scroll(-1, "units")
+    elif event.num == 5:
+        canvas.yview_scroll(1, "units")
+
+canvas.bind_all("<Button-4>", on_mousewheel)
+canvas.bind_all("<Button-5>", on_mousewheel)
+
+content_frame.bind("<Configure>", update_scroll_region)
+
+canvas.bind(
+    "<Configure>",
+    lambda event: canvas.itemconfigure(
+        canvas_window,
+        width=event.width
+    )
+)
 
 # Default button styling
 root.option_add("*Button.background", "#313244")
@@ -471,7 +556,7 @@ style.configure(
 
 # MAIN DASHBOARD HEADER
 
-header_frame = tk.Frame(root, bg="#1e1e2e")
+header_frame = tk.Frame(content_frame, bg="#1e1e2e")
 header_frame.pack(fill="x", padx=30, pady=(25, 10))
 
 heading = tk.Label(
@@ -519,7 +604,7 @@ last_updated_label.pack(anchor="e")
 
 # RESOURCE MONITORING CARDS
 
-dashboard_frame = tk.Frame(root, bg="#1e1e2e")
+dashboard_frame = tk.Frame(content_frame, bg="#1e1e2e")
 dashboard_frame.pack(fill="x", padx=25, pady=15)
 
 dashboard_frame.columnconfigure((0, 1, 2), weight=1)
@@ -570,9 +655,42 @@ disk_label, disk_bar = create_metric_card(
     dashboard_frame, "DISK", 2
 )
 
+# LIVE PERFORMANCE CHART
+
+chart_frame = tk.Frame(content_frame, bg="#313244")
+chart_frame.pack(fill="x", padx=35, pady=10)
+
+figure = Figure(figsize=(8, 2.8), dpi=100)
+figure.patch.set_facecolor("#313244")
+
+axes = figure.subplots(1, 3)
+
+cpu_line, = axes[0].plot([], [], color="#89b4fa")
+ram_line, = axes[1].plot([], [], color="#a6e3a1")
+disk_line, = axes[2].plot([], [], color="#f9e2af")
+
+titles = ["CPU Usage", "RAM Usage", "Disk Usage"]
+
+for chart, title in zip(axes, titles):
+    chart.set_title(title, color="white", fontsize=10)
+    chart.set_ylim(0, 100)
+    chart.set_xlim(0, 19)
+    chart.set_facecolor("#1e1e2e")
+    chart.tick_params(colors="white", labelsize=7)
+    chart.grid(color="#45475a", linestyle="--", alpha=0.5)
+
+figure.tight_layout()
+
+chart_canvas = FigureCanvasTkAgg(
+    figure,
+    master=chart_frame
+)
+
+chart_canvas.get_tk_widget().pack(fill="x")
+
 # SYSTEM STATUS INDICATOR
 
-status_frame = tk.Frame(root, bg="#1e1e2e")
+status_frame = tk.Frame(content_frame, bg="#1e1e2e")
 status_frame.pack(fill="x", padx=35, pady=10)
 
 status_label = tk.Label(
@@ -588,7 +706,7 @@ status_label.pack(anchor="w")
 # SYSTEM INFORMATION PANEL
 
 system_frame = tk.Frame(
-    root,
+    content_frame,
     bg="#313244",
     padx=15,
     pady=12
@@ -626,7 +744,7 @@ system_info = tk.Label(
 system_info.pack(anchor="w", pady=5)
 
 process_frame = tk.Frame(
-    root,
+    content_frame,
     bg="#313244",
     padx=15,
     pady=12
@@ -657,7 +775,7 @@ process_count_label.pack(anchor="w", pady=8)
 # SYSTEM TOOLS SECTION
 
 tools_title = tk.Label(
-    root,
+    content_frame,
     text="SYSTEM TOOLS",
     font=("Arial", 16, "bold"),
     bg="#1e1e2e",
@@ -665,7 +783,7 @@ tools_title = tk.Label(
 )
 tools_title.pack(anchor="w", padx=35, pady=(15, 10))
 
-tools_frame = tk.Frame(root, bg="#1e1e2e")
+tools_frame = tk.Frame(content_frame, bg="#1e1e2e")
 tools_frame.pack(fill="x", padx=30)
 
 tools_frame.columnconfigure((0, 1), weight=1)
