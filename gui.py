@@ -865,7 +865,7 @@ report_button = create_tool_button(
 # Start live dashboard
 update_dashboard()
 
-# ===== DASHBOARD FOOTER =====
+# DASHBOARD FOOTER
 
 footer = tk.Label(
     root,
