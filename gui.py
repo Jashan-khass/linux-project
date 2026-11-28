@@ -14,6 +14,7 @@ from modules.report import generate_report
 from tkinter import messagebox
 import platform
 import datetime
+import threading
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from collections import deque
@@ -338,20 +339,28 @@ def show_health_info():
 
 
 def generate_gui_report():
-    try:
-        generate_report()
+    def show_result(error=None):
+        if error is None:
+            messagebox.showinfo(
+                "Report Generated",
+                "System report generated successfully!\n\n"
+                "Please check the reports folder."
+            )
+        else:
+            messagebox.showerror(
+                "Report Error",
+                f"Unable to generate report:\n{error}"
+            )
 
-        messagebox.showinfo(
-            "Report Generated",
-            "System report generated successfully!\n\n"
-            "Please check the reports folder."
-        )
+    def worker():
+        try:
+            generate_report()
+        except Exception as error:
+            root.after(0, show_result, error)
+        else:
+            root.after(0, show_result)
 
-    except Exception as error:
-        messagebox.showerror(
-            "Report Error",
-            f"Unable to generate report:\n{error}"
-        )
+    threading.Thread(target=worker, daemon=True).start()
 
 
 
@@ -371,6 +380,7 @@ def refresh_dashboard_now():
     cpu_history.append(cpu)
     ram_history.append(ram)
     disk_history.append(disk)
+    time_history.append(datetime.datetime.now().strftime("%H:%M:%S"))
 
     # Update chart data
     x_values = list(range(len(cpu_history)))

@@ -36,7 +36,7 @@ if __name__ == "__main__":
 def get_cpu_data():
     import psutil
 
-    cpu_usage = psutil.cpu_percent(interval=1)
+    cpu_usage = psutil.cpu_percent(interval=None)
     physical_cores = psutil.cpu_count(logical=False)
     logical_cores = psutil.cpu_count(logical=True)
     frequency = psutil.cpu_freq()
